@@ -1,11 +1,9 @@
 import {State} from './State.js';
-import {Player} from './sprites/Player.js';
-import {Vector} from './common/Vector.js';
 import {Engine} from './Engine.js';
 import {Controller} from './Controller.js';
 
 export function run(aDocument: Document): Promise<void> {
-  var state = new State([new Player(new Vector(0, 0))]);
+  var state = State.init();
   const engine = new Engine(aDocument);
   const controller = new Controller();
   controller.register();
