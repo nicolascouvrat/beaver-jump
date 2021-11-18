@@ -2,12 +2,16 @@ import {State} from './State.js';
 import {Player} from './sprites/Player.js';
 import {Vector} from './common/Vector.js';
 import {Engine} from './Engine.js';
+import {Controller} from './Controller.js';
 
 export function run(aDocument: Document): Promise<void> {
-  const state = new State([new Player(new Vector(0, 0))]);
+  var state = new State([new Player(new Vector(0, 0))]);
   const engine = new Engine(aDocument);
+  const controller = new Controller();
+  controller.register();
   return new Promise(_ => {
     loop((stepMs: number): boolean => {
+      state = state.update(stepMs, controller.pressedKeys);
       engine.render(state);
       return true;
     });
