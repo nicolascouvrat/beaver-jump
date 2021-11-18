@@ -1,0 +1,11 @@
+*.swp
+node_modules
+
+# OS metadata
+.DS_Store
+
+# Ignore built ts files
+build/**/*
+
+# ignore yarn.lock
+package-lock.json
