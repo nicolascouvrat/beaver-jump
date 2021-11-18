@@ -1,6 +1,12 @@
+import {Sprite} from './sprites/Sprite.js';
+
 /**
  * The current game state
  */
 export class State {
-  sprites: Sprite[];
+  readonly sprites: Sprite[];
+
+  constructor(sprites: Sprite[]) {
+    this.sprites = sprites;
+  }
 }

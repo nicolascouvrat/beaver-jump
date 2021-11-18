@@ -1,3 +1,3 @@
-import {Engine} from './Engine.js';
+import {run} from './Game.js';
 
-let engine = new Engine(document);
+run(document);
