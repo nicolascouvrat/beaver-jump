@@ -4,6 +4,8 @@ import {ScreenHeight, ScreenWidth} from './Constants.js';
 
 const GameOverMessage: string = 'GAME OVER';
 const GameOverMessageFontSize: number = 50;
+const ScoreMessage: string = 'SCORE: ';
+const ScoreFontSize: number = 30;
 
 export class Engine {
   private canvas: HTMLCanvasElement;
@@ -31,13 +33,26 @@ export class Engine {
     state.sprites.forEach((sprite: Sprite): void => this.renderSprite(sprite));
     this.frameCounter = this.frameCounter + 1;
     this.fpsFrame.innerHTML = `${this.frameCounter}`;
+    this.displayScore(state.score);
     if (state.stage === Stage.LOST) {
       this.displayGameOverMessage();
       return;
     }
   }
 
+  displayScore(score: number) {
+    this.context.fillStyle = 'black';
+    this.context.font = ` ${ScoreFontSize}px serif`;
+    const msg = `${ScoreMessage} ${score}`;
+    var txtSize = this.context.measureText(msg);
+    this.context.fillText(
+      msg,
+      this.canvas.width - txtSize.width,
+      ScoreFontSize
+    );
+  }
   displayGameOverMessage() {
+    this.context.fillStyle = 'black';
     this.context.font = ` ${GameOverMessageFontSize}px serif`;
     var txtSize = this.context.measureText(GameOverMessage);
     this.context.fillText(

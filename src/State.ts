@@ -16,7 +16,9 @@ import {
   PlayerHeight,
   JumpSpeed,
   RockSpawnDifficulty,
+  PointsPerRock,
   LogSpawnDifficulty,
+  PointsPerLog,
   BigRockHeight,
   LogWidth,
 } from './Constants.js';
@@ -177,7 +179,7 @@ export class State {
     this.stage = stage;
     this.player = player;
     this.sprites = sprites;
-    this.score = 0;
+    this.score = score;
   }
 
   static init(): State {
@@ -198,19 +200,34 @@ export class State {
     sprites.forEach(sprite => sprite.update(step, keys));
     sprites.push(...spawnSprites());
 
-    return this.check(player, sprites);
+    return this.check(player, sprites, this.score);
   }
 
-  check(player: Player, sprites: Sprite[]): State {
+  check(player: Player, sprites: Sprite[], previousScore: number): State {
+    var inScope: Sprite[] = [];
+    var newScore: number = previousScore;
     for (var i = 0; i < sprites.length; i++) {
       const sprite: Sprite = sprites[i];
+      if (boundaries.isOutOfBounds(sprite)) {
+        if (sprite instanceof Rock) {
+          newScore += PointsPerRock;
+        }
+        continue;
+      }
+
       if (collide(player, sprite)) {
         if (sprite instanceof Rock) {
-          return new State(Stage.LOST, player, sprites, 0);
+          return new State(Stage.LOST, player, sprites, previousScore);
+        }
+
+        if (sprite instanceof Log) {
+          newScore += PointsPerLog;
+          continue;
         }
       }
+      inScope.push(sprite);
     }
 
-    return new State(currentStage, player, sprites, 0);
+    return new State(currentStage, player, inScope, newScore);
   }
 }
