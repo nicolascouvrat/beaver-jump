@@ -6,6 +6,9 @@ import {Background} from './Background.js';
 
 const GameOverMessage: string = 'GAME OVER';
 const GameOverMessageFontSize: number = 30;
+const PressStartMessage = '(PRESS SPACE TO START)';
+const ControlsMessage = 'SPACE = JUMP, COLLECT LOGS, AVOID ROCKS!';
+const ControlsFontSize = 12;
 const ScoreMessage: string = 'SCORE: ';
 const ScoreFontSize: number = 20;
 const Font = 'prstart';
@@ -48,6 +51,28 @@ export class Engine {
       msg,
       this.canvas.width - txtSize.width,
       ScoreFontSize
+    );
+  }
+
+  displayStartMessage() {
+    this.context.fillStyle = 'black';
+    this.context.font = ` ${ScoreFontSize}px ${Font}`;
+    var txtSize = this.context.measureText(PressStartMessage);
+    this.context.fillText(
+      PressStartMessage,
+      (this.canvas.width - txtSize.width) / 2,
+      this.canvas.height
+    );
+  }
+
+  displayControlsMessage() {
+    this.context.fillStyle = 'black';
+    this.context.font = ` ${ControlsFontSize}px ${Font}`;
+    var txtSize = this.context.measureText(ControlsMessage);
+    this.context.fillText(
+      ControlsMessage,
+      (this.canvas.width - txtSize.width) / 2,
+      (this.canvas.height + ControlsFontSize) / 2
     );
   }
 

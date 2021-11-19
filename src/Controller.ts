@@ -12,15 +12,12 @@ const keyLookup: Record<Key, string> = {
   [Key.SPACE]: ' ',
 };
 
-type PressedKeys2 = Record<Key, boolean>;
-
 export class Controller {
   pressedKeys: PressedKeys = {[Keys.SPACE]: false};
-  keys: PressedKeys2 = {[Key.SPACE]: false};
+  onSpacePressed: () => void = () => {};
 
-  constructor() {
-    this.keys = {[Key.SPACE]: false};
-  }
+  constructor() {}
+
   register(): void {
     var callback = this.onPress.bind(this);
     window.addEventListener('keyup', callback);
@@ -30,7 +27,16 @@ export class Controller {
   onPress(event: KeyboardEvent): void {
     if (event.key === Keys.SPACE) {
       this.pressedKeys[Keys.SPACE] = event.type === 'keydown';
+      this.onSpacePressed();
       event.preventDefault();
     }
+  }
+
+  registerCallback(f: () => void) {
+    this.onSpacePressed = f;
+  }
+
+  unregisterCallback() {
+    this.onSpacePressed = () => {};
   }
 }
