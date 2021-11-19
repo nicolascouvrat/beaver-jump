@@ -42,6 +42,10 @@ export class Engine {
     }
   }
 
+  remove() {
+    this.canvas.remove();
+  }
+
   displayScore(score: number) {
     this.context.fillStyle = 'black';
     this.context.font = ` ${ScoreFontSize}px ${Font}`;

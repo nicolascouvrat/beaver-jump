@@ -14,6 +14,9 @@ function runGame(engine: Engine, controller: Controller): Promise<void> {
 }
 
 export function run(aDocument: Document): Promise<void> {
+  const a = new Engine(aDocument, {});
+  a.displayStartMessage();
+  a.remove();
   return sleep(1000)
     .then(__ => loadAllImages(AllImages))
     .then(images => {
