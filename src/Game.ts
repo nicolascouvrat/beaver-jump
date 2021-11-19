@@ -14,8 +14,8 @@ function runGame(engine: Engine, controller: Controller): Promise<void> {
 }
 
 export function run(aDocument: Document): Promise<void> {
-  return loadAllImages(AllImages)
-    .then(sleep(1000))
+  return sleep(1000)
+    .then(__ => loadAllImages(AllImages))
     .then(images => {
       const engine = new Engine(aDocument, images);
       const controller = new Controller();
