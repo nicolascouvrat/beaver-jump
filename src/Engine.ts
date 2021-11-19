@@ -1,6 +1,7 @@
 import {State, Stage} from './State.js';
 import {Sprite} from './sprites/Sprite.js';
 import {ScreenHeight, ScreenWidth} from './Constants.js';
+import {Images} from './Images.js';
 
 const GameOverMessage: string = 'GAME OVER';
 const GameOverMessageFontSize: number = 30;
@@ -11,8 +12,9 @@ const Font = 'prstart';
 export class Engine {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
+  private images: Images;
 
-  constructor(parent: Document) {
+  constructor(parent: Document, images: Images) {
     var canvas = parent.createElement('canvas') as HTMLCanvasElement;
     canvas.setAttribute('class', 'gameCanvas');
     parent.body.appendChild(canvas);
@@ -21,6 +23,7 @@ export class Engine {
     var context = canvas.getContext('2d') as CanvasRenderingContext2D;
     this.canvas = canvas;
     this.context = context;
+    this.images = images;
   }
 
   render(state: State) {
@@ -57,6 +60,16 @@ export class Engine {
   }
 
   renderSprite(sprite: Sprite) {
+    if (this.images[sprite.asset]) {
+      const img = this.images[sprite.asset];
+      this.context.drawImage(
+        img,
+        sprite.position.x,
+        this.canvas.height - sprite.position.y - sprite.size.height
+      );
+      return;
+    }
+
     this.context.fillStyle = sprite.asset;
     this.context.fillRect(
       sprite.position.x,

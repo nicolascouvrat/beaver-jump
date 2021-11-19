@@ -123,7 +123,7 @@ function spawnRock(): Sprite {
 
 function spawnLog(): Sprite {
   var at = spawnPoint.plus(
-    new Vector(0, Math.random() * (ScreenWidth - LogHeight))
+    new Vector(0, Math.random() * (ScreenHeight - LogHeight))
   );
   return new Log(at);
 }

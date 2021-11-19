@@ -51,3 +51,10 @@ export const AirTime: number = minAirTime * AirTimeDifficulty;
 export const JumpSpeed: number = (4 * (ScreenHeight - PlayerHeight)) / AirTime;
 export const Gravity: number =
   Math.pow(JumpSpeed, 2) / (2 * (ScreenHeight - PlayerHeight));
+
+/**
+ * Images
+ */
+export const SmallRockImg = 'SmallRock.png';
+export const HigherRockImg = 'HigherRock.png';
+export const AllImages = [SmallRockImg, HigherRockImg];

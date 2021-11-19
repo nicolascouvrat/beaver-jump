@@ -1,17 +1,21 @@
 import {State, Stage} from './State.js';
 import {Engine} from './Engine.js';
 import {Controller} from './Controller.js';
+import {loadAllImages} from './Images.js';
+import {AllImages} from './Constants.js';
 
 export function run(aDocument: Document): Promise<void> {
-  var state = State.init();
-  const engine = new Engine(aDocument);
-  const controller = new Controller();
-  controller.register();
-  return new Promise(_ => {
-    loop((stepMs: number): boolean => {
-      state = state.update(stepMs, controller.pressedKeys);
-      engine.render(state);
-      return state.stage != Stage.LOST;
+  return loadAllImages(AllImages).then(images => {
+    var state = State.init();
+    const engine = new Engine(aDocument, images);
+    const controller = new Controller();
+    controller.register();
+    return new Promise(_ => {
+      loop((stepMs: number): boolean => {
+        state = state.update(stepMs, controller.pressedKeys);
+        engine.render(state);
+        return state.stage != Stage.LOST;
+      });
     });
   });
 }

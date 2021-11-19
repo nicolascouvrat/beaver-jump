@@ -6,6 +6,8 @@ import {
   SmallRockHeight,
   Speed,
   RockWidth,
+  SmallRockImg,
+  HigherRockImg,
 } from '../Constants.js';
 
 export class Rock {
@@ -22,9 +24,9 @@ export class Rock {
 }
 
 const BigRock = (position: Vector): Rock =>
-  new Rock(new Size(RockWidth, BigRockHeight), position, 'blue');
+  new Rock(new Size(RockWidth, BigRockHeight), position, HigherRockImg);
 const SmallRock = (position: Vector): Rock =>
-  new Rock(new Size(RockWidth, SmallRockHeight), position, 'green');
+  new Rock(new Size(RockWidth, SmallRockHeight), position, SmallRockImg);
 
 export function generateRock(position: Vector): Rock {
   var seed = Math.random();
