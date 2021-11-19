@@ -14,15 +14,17 @@ function runGame(engine: Engine, controller: Controller): Promise<void> {
 }
 
 export function run(aDocument: Document): Promise<void> {
-  return loadAllImages(AllImages).then(images => {
-    const engine = new Engine(aDocument, images);
-    const controller = new Controller();
-    controller.register();
-    engine.displayControlsMessage();
-    return new Promise(_ => {
-      standbyAndRun(controller, engine);
+  return loadAllImages(AllImages)
+    .then(sleep(1000))
+    .then(images => {
+      const engine = new Engine(aDocument, images);
+      const controller = new Controller();
+      controller.register();
+      engine.displayControlsMessage();
+      return new Promise(_ => {
+        standbyAndRun(controller, engine);
+      });
     });
-  });
 }
 
 function standbyAndRun(controller: Controller, engine: Engine) {
