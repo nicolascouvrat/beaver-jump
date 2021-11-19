@@ -3,36 +3,30 @@ import {Sprite} from './sprites/Sprite.js';
 import {ScreenHeight, ScreenWidth} from './Constants.js';
 
 const GameOverMessage: string = 'GAME OVER';
-const GameOverMessageFontSize: number = 50;
+const GameOverMessageFontSize: number = 30;
 const ScoreMessage: string = 'SCORE: ';
-const ScoreFontSize: number = 30;
+const ScoreFontSize: number = 20;
+const Font = 'prstart';
 
 export class Engine {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  // DEBUG, remove me
-  private frameCounter: number = 0;
-  private fpsFrame: HTMLElement;
 
   constructor(parent: Document) {
     var canvas = parent.createElement('canvas') as HTMLCanvasElement;
-    var fpsFrame = parent.createElement('div');
+    canvas.setAttribute('class', 'gameCanvas');
     parent.body.appendChild(canvas);
-    parent.body.appendChild(fpsFrame);
     canvas.width = ScreenWidth;
     canvas.height = ScreenHeight;
     var context = canvas.getContext('2d') as CanvasRenderingContext2D;
     this.canvas = canvas;
     this.context = context;
-    this.fpsFrame = fpsFrame;
   }
 
   render(state: State) {
     this.clear();
     this.renderSprite(state.player);
     state.sprites.forEach((sprite: Sprite): void => this.renderSprite(sprite));
-    this.frameCounter = this.frameCounter + 1;
-    this.fpsFrame.innerHTML = `${this.frameCounter}`;
     this.displayScore(state.score);
     if (state.stage === Stage.LOST) {
       this.displayGameOverMessage();
@@ -42,7 +36,7 @@ export class Engine {
 
   displayScore(score: number) {
     this.context.fillStyle = 'black';
-    this.context.font = ` ${ScoreFontSize}px serif`;
+    this.context.font = ` ${ScoreFontSize}px ${Font}`;
     const msg = `${ScoreMessage} ${score}`;
     var txtSize = this.context.measureText(msg);
     this.context.fillText(
@@ -53,7 +47,7 @@ export class Engine {
   }
   displayGameOverMessage() {
     this.context.fillStyle = 'black';
-    this.context.font = ` ${GameOverMessageFontSize}px serif`;
+    this.context.font = ` ${GameOverMessageFontSize}px ${Font}`;
     var txtSize = this.context.measureText(GameOverMessage);
     this.context.fillText(
       GameOverMessage,
