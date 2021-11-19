@@ -4,7 +4,7 @@ import {PressedKeys} from '../Controller.js';
 import {
   BigRockHeight,
   SmallRockHeight,
-  RockSpeed,
+  Speed,
   RockWidth,
 } from '../Constants.js';
 
@@ -16,7 +16,7 @@ export class Rock {
   ) {}
 
   update(step: number, _: PressedKeys) {
-    var newPosition = this.position.plus(new Vector(-RockSpeed * step, 0));
+    var newPosition = this.position.plus(new Vector(-Speed * step, 0));
     this.position = newPosition;
   }
 }

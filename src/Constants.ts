@@ -10,15 +10,27 @@ export const StartingStageDuration: number = 3;
  */
 export const RockWidth: number = 64;
 // In pixels/s
-export const RockSpeed: number = 300;
+export const Speed: number = 300;
 export const SmallRockHeight: number = 32;
 export const BigRockHeight: number = 48;
+
+/*
+ * LOGS
+ */
+export const LogHeight = 32;
+export const LogWidth = 32;
 
 /**
  * GAME
  */
 
-export const Difficulty = 1.2;
+// The higher, the more we fly (easier)
+export const AirTimeDifficulty = 1.2;
+// The higher, the less rocks we spawn (easier)
+export const RockSpawnDifficulty = 2;
+// The higer, the less logs we spawn (harder)
+export const LogSpawnDifficulty = 1;
+
 export const PointsPerRock = 50;
 export const PointsPerLog = 100;
 
@@ -30,10 +42,10 @@ export const PlayerWidth: number = 78;
 // The minimum air time to go over a block, assuming you're doing it pixel perfect!
 const minAirTime: number =
   (RockWidth + PlayerWidth) /
-  (RockSpeed * Math.sqrt(1 - BigRockHeight / (ScreenHeight - PlayerHeight)));
+  (Speed * Math.sqrt(1 - BigRockHeight / (ScreenHeight - PlayerHeight)));
 // The total air time when jumping, in seconds
 // TODO: make higher difficulty harder, not easier!
-export const AirTime: number = minAirTime * Difficulty;
+export const AirTime: number = minAirTime * AirTimeDifficulty;
 // Physics tells us that, if we want to be at the top when the speed reaches zero and be in the air
 // for a total of AirTime, then we have the following:
 export const JumpSpeed: number = (4 * (ScreenHeight - PlayerHeight)) / AirTime;

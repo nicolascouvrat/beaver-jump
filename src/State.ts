@@ -4,16 +4,21 @@ import {Vector} from './common/Vector.js';
 import {Player} from './sprites/Player.js';
 import {Size} from './common/Size.js';
 import {Boundaries} from './common/Boundaries.js';
+import {Log} from './sprites/Log.js';
 import {
   ScreenHeight,
+  LogHeight,
   ScreenWidth,
   StartingStageDuration,
-  RockSpeed,
+  Speed,
   RockWidth,
   PlayerWidth,
   PlayerHeight,
   JumpSpeed,
+  RockSpawnDifficulty,
+  LogSpawnDifficulty,
   BigRockHeight,
+  LogWidth,
 } from './Constants.js';
 import {Rock, generateRock} from './sprites/Rock.js';
 
@@ -65,18 +70,19 @@ function collide(a: GameObject, b: GameObject): boolean {
 }
 
 const boundaries: Boundaries = new Boundaries(0, ScreenWidth, 0, ScreenHeight);
-const rockSpawnPoint: Vector = new Vector(ScreenWidth, 0);
-const rockSpawnChance: number = 1;
+const spawnPoint: Vector = new Vector(ScreenWidth, 0);
+const rockSpawnChance = 0.1;
+const logSpawnChance = 0.1;
 
 // This is the minimal spacing between 2 rocks if you do pixel perfect jumps, i.e you start at the
 // exact right time so the curve fits perfectly above the largest rock
 const minRockSpacing =
   PlayerWidth +
-  ((2 * RockSpeed * 2 * (ScreenHeight - PlayerHeight)) / JumpSpeed) *
+  ((2 * Speed * 2 * (ScreenHeight - PlayerHeight)) / JumpSpeed) *
     (1 - Math.sqrt(1 - BigRockHeight / (ScreenHeight - PlayerHeight)));
-const rockSpacingDifficulty = 2;
 const rockSpawnCooldown: number =
-  (RockWidth + minRockSpacing * rockSpacingDifficulty) / RockSpeed;
+  (RockWidth + minRockSpacing * RockSpawnDifficulty) / Speed;
+const logSpawnCooldown = (LogWidth * LogSpawnDifficulty) / Speed;
 
 export enum Stage {
   STARTING,
@@ -85,7 +91,79 @@ export enum Stage {
 }
 
 var currentStage = Stage.STARTING;
-var isSpawnCooldown = false;
+var isRockSpawnCooldown = false;
+var isLogSpawnCooldown = false;
+
+function shouldSpawnLog(): boolean {
+  if (isLogSpawnCooldown) {
+    return false;
+  }
+  var seed = Math.random();
+  return seed < logSpawnChance;
+}
+
+function shouldSpawnRock(): boolean {
+  if (isRockSpawnCooldown) {
+    return false;
+  }
+
+  var seed = Math.random();
+  if (seed > rockSpawnChance) {
+    return false;
+  }
+
+  return true;
+}
+
+function spawnRock(): Sprite {
+  return generateRock(spawnPoint);
+}
+
+function spawnLog(): Sprite {
+  var at = spawnPoint.plus(
+    new Vector(0, Math.random() * (ScreenWidth - LogHeight))
+  );
+  return new Log(at);
+}
+
+function spawnSprites(): Sprite[] {
+  const willSpawnLog = shouldSpawnLog();
+  const willSpawnRock = shouldSpawnRock();
+  if (!willSpawnRock && !willSpawnLog) {
+    return [];
+  }
+
+  if (willSpawnLog && !willSpawnRock) {
+    isRockSpawnCooldown = true;
+    isLogSpawnCooldown = true;
+    setTimeout(() => {
+      isRockSpawnCooldown = false;
+      isLogSpawnCooldown = false;
+    }, logSpawnCooldown * 1000);
+
+    return [spawnLog()];
+  }
+
+  if (willSpawnRock && !willSpawnLog) {
+    isRockSpawnCooldown = true;
+    isLogSpawnCooldown = true;
+    // TODO: handle cooldowns separately, but that is a little bit more involved (to ensure we don't
+    // cancel the timeout with the log spawn
+    setTimeout(() => {
+      isRockSpawnCooldown = false;
+      isLogSpawnCooldown = false;
+    }, rockSpawnCooldown * 1000);
+    return [spawnRock()];
+  }
+
+  const log = spawnLog();
+  const rock = spawnRock();
+  if (collide(log, rock)) {
+    return [];
+  }
+
+  return [log, rock];
+}
 
 /**
  * The current game state
@@ -118,11 +196,7 @@ export class State {
 
     player.update(step, keys);
     sprites.forEach(sprite => sprite.update(step, keys));
-    if (this.shouldSpawnRock()) {
-      sprites.push(generateRock(rockSpawnPoint));
-      isSpawnCooldown = true;
-      setTimeout(() => (isSpawnCooldown = false), rockSpawnCooldown * 1000);
-    }
+    sprites.push(...spawnSprites());
 
     return this.check(player, sprites);
   }
@@ -138,18 +212,5 @@ export class State {
     }
 
     return new State(currentStage, player, sprites, 0);
-  }
-
-  shouldSpawnRock(): boolean {
-    if (isSpawnCooldown) {
-      return false;
-    }
-
-    var seed = Math.random();
-    if (seed > rockSpawnChance) {
-      return false;
-    }
-
-    return true;
   }
 }
