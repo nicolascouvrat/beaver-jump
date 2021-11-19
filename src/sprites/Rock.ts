@@ -1,7 +1,12 @@
 import {Vector} from '../common/Vector.js';
 import {Size} from '../common/Size.js';
 import {PressedKeys} from '../Controller.js';
-import {RockSpeed, RockWidth} from '../Constants.js';
+import {
+  BigRockHeight,
+  SmallRockHeight,
+  RockSpeed,
+  RockWidth,
+} from '../Constants.js';
 
 export class Rock {
   constructor(
@@ -17,9 +22,9 @@ export class Rock {
 }
 
 const BigRock = (position: Vector): Rock =>
-  new Rock(new Size(RockWidth, 48), position, 'blue');
+  new Rock(new Size(RockWidth, BigRockHeight), position, 'blue');
 const SmallRock = (position: Vector): Rock =>
-  new Rock(new Size(RockWidth, 32), position, 'green');
+  new Rock(new Size(RockWidth, SmallRockHeight), position, 'green');
 
 export function generateRock(position: Vector): Rock {
   var seed = Math.random();

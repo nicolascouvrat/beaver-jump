@@ -1,6 +1,9 @@
-import {State} from './State.js';
+import {State, Stage} from './State.js';
 import {Sprite} from './sprites/Sprite.js';
 import {ScreenHeight, ScreenWidth} from './Constants.js';
+
+const GameOverMessage: string = 'GAME OVER';
+const GameOverMessageFontSize: number = 50;
 
 export class Engine {
   private canvas: HTMLCanvasElement;
@@ -24,11 +27,24 @@ export class Engine {
 
   render(state: State) {
     this.clear();
-    this.context.fillStyle = 'yellow';
-    this.context.fillRect(0, 0, 78, 52);
+    this.renderSprite(state.player);
     state.sprites.forEach((sprite: Sprite): void => this.renderSprite(sprite));
     this.frameCounter = this.frameCounter + 1;
     this.fpsFrame.innerHTML = `${this.frameCounter}`;
+    if (state.stage === Stage.LOST) {
+      this.displayGameOverMessage();
+      return;
+    }
+  }
+
+  displayGameOverMessage() {
+    this.context.font = ` ${GameOverMessageFontSize}px serif`;
+    var txtSize = this.context.measureText(GameOverMessage);
+    this.context.fillText(
+      GameOverMessage,
+      (this.canvas.width - txtSize.width) / 2,
+      (this.canvas.height + GameOverMessageFontSize) / 2
+    );
   }
 
   renderSprite(sprite: Sprite) {

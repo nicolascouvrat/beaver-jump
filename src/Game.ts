@@ -1,4 +1,4 @@
-import {State} from './State.js';
+import {State, Stage} from './State.js';
 import {Engine} from './Engine.js';
 import {Controller} from './Controller.js';
 
@@ -11,7 +11,7 @@ export function run(aDocument: Document): Promise<void> {
     loop((stepMs: number): boolean => {
       state = state.update(stepMs, controller.pressedKeys);
       engine.render(state);
-      return true;
+      return state.stage != Stage.LOST;
     });
   });
 }
