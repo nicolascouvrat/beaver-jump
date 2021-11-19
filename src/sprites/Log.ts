@@ -1,12 +1,12 @@
 import {Vector} from '../common/Vector.js';
 import {Size} from '../common/Size.js';
 import {PressedKeys} from '../Controller.js';
-import {Speed} from '../Constants.js';
+import {Speed, LogImg} from '../Constants.js';
 
 export class Log {
   readonly animationFrame = 0;
   readonly size = new Size(32, 32);
-  readonly asset = 'yellow';
+  readonly asset = LogImg;
 
   constructor(public position: Vector) {}
 

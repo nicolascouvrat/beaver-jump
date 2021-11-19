@@ -59,6 +59,7 @@ export const SmallRockImg = 'SmallRock.png';
 export const HigherRockImg = 'HigherRock.png';
 export const PlayerImg = 'BeaverWalkComplete.png';
 export const BackgroundImg = 'Background.png';
+export const LogImg = 'Log.png';
 // in FPS
 export const PlayerAnimationSpeed = 10;
 export const AllImages = [
@@ -66,4 +67,5 @@ export const AllImages = [
   PlayerImg,
   SmallRockImg,
   HigherRockImg,
+  LogImg,
 ];
