@@ -11,6 +11,7 @@ import {
 } from '../Constants.js';
 
 export class Rock {
+  readonly animationFrame = 0;
   constructor(
     public size: Size,
     public position: Vector,

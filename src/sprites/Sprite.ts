@@ -10,4 +10,5 @@ export interface Sprite {
   position: Vector;
   asset: string;
   update(stepMs: number, keys: PressedKeys): void;
+  animationFrame: number;
 }

@@ -4,6 +4,7 @@ import {PressedKeys} from '../Controller.js';
 import {Speed} from '../Constants.js';
 
 export class Log {
+  readonly animationFrame = 0;
   readonly size = new Size(32, 32);
   readonly asset = 'yellow';
 

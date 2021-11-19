@@ -2,6 +2,7 @@ import {State, Stage} from './State.js';
 import {Sprite} from './sprites/Sprite.js';
 import {ScreenHeight, ScreenWidth} from './Constants.js';
 import {Images} from './Images.js';
+import {Background} from './Background.js';
 
 const GameOverMessage: string = 'GAME OVER';
 const GameOverMessageFontSize: number = 30;
@@ -28,6 +29,7 @@ export class Engine {
 
   render(state: State) {
     this.clear();
+    this.renderBackground(state.background);
     this.renderSprite(state.player);
     state.sprites.forEach((sprite: Sprite): void => this.renderSprite(sprite));
     this.displayScore(state.score);
@@ -48,6 +50,7 @@ export class Engine {
       ScoreFontSize
     );
   }
+
   displayGameOverMessage() {
     this.context.fillStyle = 'black';
     this.context.font = ` ${GameOverMessageFontSize}px ${Font}`;
@@ -64,8 +67,14 @@ export class Engine {
       const img = this.images[sprite.asset];
       this.context.drawImage(
         img,
+        sprite.size.width * sprite.animationFrame,
+        0,
+        sprite.size.width,
+        sprite.size.height,
         sprite.position.x,
-        this.canvas.height - sprite.position.y - sprite.size.height
+        this.canvas.height - sprite.position.y - sprite.size.height,
+        sprite.size.width,
+        sprite.size.height
       );
       return;
     }
@@ -76,6 +85,32 @@ export class Engine {
       this.canvas.height - sprite.position.y,
       sprite.size.width,
       -sprite.size.height
+    );
+  }
+
+  renderBackground(background: Background) {
+    const img = this.images[background.asset];
+    this.context.drawImage(
+      img,
+      -background.position.x,
+      0,
+      background.size.width,
+      background.size.height,
+      0,
+      0,
+      background.size.width,
+      background.size.height
+    );
+    this.context.drawImage(
+      img,
+      0,
+      0,
+      background.size.width,
+      background.size.height,
+      ScreenWidth + background.position.x,
+      0,
+      background.size.width,
+      background.size.height
     );
   }
 

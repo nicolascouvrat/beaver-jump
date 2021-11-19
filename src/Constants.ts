@@ -57,4 +57,13 @@ export const Gravity: number =
  */
 export const SmallRockImg = 'SmallRock.png';
 export const HigherRockImg = 'HigherRock.png';
-export const AllImages = [SmallRockImg, HigherRockImg];
+export const PlayerImg = 'BeaverWalkComplete.png';
+export const BackgroundImg = 'Background.png';
+// in FPS
+export const PlayerAnimationSpeed = 10;
+export const AllImages = [
+  BackgroundImg,
+  PlayerImg,
+  SmallRockImg,
+  HigherRockImg,
+];

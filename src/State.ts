@@ -1,5 +1,6 @@
 import {Sprite} from './sprites/Sprite.js';
 import {PressedKeys} from './Controller.js';
+import {Background} from './Background.js';
 import {Vector} from './common/Vector.js';
 import {Player} from './sprites/Player.js';
 import {Size} from './common/Size.js';
@@ -175,11 +176,20 @@ export class State {
   readonly stage: Stage;
   readonly score: number;
   readonly sprites: Sprite[];
-  constructor(stage: Stage, player: Player, sprites: Sprite[], score: number) {
+  readonly background: Background;
+
+  constructor(
+    stage: Stage,
+    player: Player,
+    sprites: Sprite[],
+    score: number,
+    background: Background
+  ) {
     this.stage = stage;
     this.player = player;
     this.sprites = sprites;
     this.score = score;
+    this.background = background;
   }
 
   static init(): State {
@@ -189,7 +199,7 @@ export class State {
       StartingStageDuration * 1000
     );
     const player = new Player(new Vector(0, 0), boundaries.constrain);
-    return new State(currentStage, player, [], 0);
+    return new State(currentStage, player, [], 0, new Background());
   }
 
   update(step: number, keys: PressedKeys): State {
@@ -197,13 +207,19 @@ export class State {
     var sprites = this.sprites;
 
     player.update(step, keys);
+    this.background.advance(step);
     sprites.forEach(sprite => sprite.update(step, keys));
     sprites.push(...spawnSprites());
 
-    return this.check(player, sprites, this.score);
+    return this.check(player, sprites, this.score, this.background);
   }
 
-  check(player: Player, sprites: Sprite[], previousScore: number): State {
+  check(
+    player: Player,
+    sprites: Sprite[],
+    previousScore: number,
+    background: Background
+  ): State {
     var inScope: Sprite[] = [];
     var newScore: number = previousScore;
     for (var i = 0; i < sprites.length; i++) {
@@ -217,7 +233,13 @@ export class State {
 
       if (collide(player, sprite)) {
         if (sprite instanceof Rock) {
-          return new State(Stage.LOST, player, sprites, previousScore);
+          return new State(
+            Stage.LOST,
+            player,
+            sprites,
+            previousScore,
+            background
+          );
         }
 
         if (sprite instanceof Log) {
@@ -228,6 +250,6 @@ export class State {
       inScope.push(sprite);
     }
 
-    return new State(currentStage, player, inScope, newScore);
+    return new State(currentStage, player, inScope, newScore, background);
   }
 }
