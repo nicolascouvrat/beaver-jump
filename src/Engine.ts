@@ -1,21 +1,21 @@
 import {State} from './State.js';
 import {Sprite} from './sprites/Sprite.js';
+import {ScreenHeight, ScreenWidth} from './Constants.js';
 
 export class Engine {
-  private fpsFrame: HTMLElement;
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  private static WIDTH: number = 600;
-  private static HEIGHT: number = 150;
+  // DEBUG, remove me
   private frameCounter: number = 0;
+  private fpsFrame: HTMLElement;
 
   constructor(parent: Document) {
     var canvas = parent.createElement('canvas') as HTMLCanvasElement;
     var fpsFrame = parent.createElement('div');
     parent.body.appendChild(canvas);
     parent.body.appendChild(fpsFrame);
-    canvas.style.width = `${Engine.WIDTH}px`;
-    canvas.style.height = `${Engine.HEIGHT}px`;
+    canvas.width = ScreenWidth;
+    canvas.height = ScreenHeight;
     var context = canvas.getContext('2d') as CanvasRenderingContext2D;
     this.canvas = canvas;
     this.context = context;
@@ -24,16 +24,15 @@ export class Engine {
 
   render(state: State) {
     this.clear();
+    this.context.fillStyle = 'yellow';
+    this.context.fillRect(0, 0, 78, 52);
+    state.sprites.forEach((sprite: Sprite): void => this.renderSprite(sprite));
     this.frameCounter = this.frameCounter + 1;
     this.fpsFrame.innerHTML = `${this.frameCounter}`;
-    state.sprites.forEach((sprite: Sprite): void => this.renderSprite(sprite));
   }
 
   renderSprite(sprite: Sprite) {
     this.context.fillStyle = sprite.asset;
-    if (sprite.position.y > 150 || sprite.position.y < 0) {
-      console.log('yo what');
-    }
     this.context.fillRect(
       sprite.position.x,
       this.canvas.height - sprite.position.y,

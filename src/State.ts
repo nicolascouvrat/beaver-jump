@@ -5,6 +5,7 @@ import {Player} from './sprites/Player.js';
 import {Size} from './common/Size.js';
 import {Boundaries} from './common/Boundaries.js';
 import {ScreenHeight, ScreenWidth} from './Constants.js';
+import {generateRock} from './sprites/Rock.js';
 
 interface GameObject {
   size: Size;
@@ -53,28 +54,32 @@ function collide(a: GameObject, b: GameObject): boolean {
   return new HitBox(a).intersects(new HitBox(b));
 }
 
+const boundaries: Boundaries = new Boundaries(0, ScreenWidth, 0, ScreenHeight);
+const rockSpawnPoint: Vector = new Vector(ScreenWidth, 0);
+const rockSpawnChance: number = 0.01;
+
 /**
  * The current game state
  */
 export class State {
   readonly sprites: Sprite[];
-  private static readonly boundaries: Boundaries = new Boundaries(
-    0,
-    ScreenWidth,
-    0,
-    ScreenHeight
-  );
   constructor(sprites: Sprite[]) {
     this.sprites = sprites;
   }
 
   static init(): State {
-    const player = new Player(new Vector(1, 0), State.boundaries.constrain);
-    return new State([player]);
+    const player = new Player(new Vector(1, 0), boundaries.constrain);
+    const aRock = generateRock(rockSpawnPoint);
+    return new State([player, aRock]);
   }
 
   update(stepMs: number, keys: PressedKeys): State {
-    this.sprites.forEach(sprite => sprite.update(stepMs, keys));
-    return new State(this.sprites);
+    var sprites = this.sprites;
+    sprites.forEach(sprite => sprite.update(stepMs, keys));
+    if (Math.random() < rockSpawnChance) {
+      sprites.push(generateRock(rockSpawnPoint));
+    }
+
+    return new State(sprites);
   }
 }

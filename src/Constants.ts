@@ -2,6 +2,9 @@ export const ScreenHeight: number = 150;
 export const ScreenWidth: number = 600;
 export const PlayerHeight: number = 52;
 export const PlayerWidth: number = 78;
+export const RockWidth: number = 64;
+// In pixels/s
+export const RockSpeed: number = 300;
 // The total air time when jumping, in second
 export const AirTime: number = 1;
 // Physics tells us that, if we want to be at the top when the speed reaches zero and be in the air
